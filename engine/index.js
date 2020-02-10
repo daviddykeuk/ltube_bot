@@ -14,9 +14,13 @@ class Engine {
         mostRecentComms[key] != message
       ) {
         console.log(`${key} line has changed, sending message: "${message}"`);
-        await this.telegram.sendMessage(message);
-        mostRecentComms[key] = message;
-        this.data.updateDataById("line-comms", mostRecentComms);
+        try {
+          await this.telegram.sendMessage(message, statuses[key].detail);
+          mostRecentComms[key] = message;
+          this.data.updateDataById("line-comms", mostRecentComms);
+        } catch (e) {
+          console.error(e);
+        }
       }
     });
   }

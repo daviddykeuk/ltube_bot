@@ -15,7 +15,8 @@ module.exports.getLineStatuses = () => {
           lines[l.id] = {
             name: l.name,
             status: l.lineStatuses[0].statusSeverityDescription,
-            message: calculateMessage(l)
+            message: calculateMessage(l),
+            detail: l.lineStatuses[0].reason || ""
           };
         });
         resolve(lines);
