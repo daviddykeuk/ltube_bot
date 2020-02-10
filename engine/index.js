@@ -8,12 +8,12 @@ class Engine {
 
   processStatuses(statuses, mostRecentComms, preferences) {
     Object.keys(statuses).forEach(async key => {
-      let message = `${statuses[key].name}: ${statuses[key].status}`;
+      let message = statuses[key].message;
       if (
         preferences.TUBE.LINES.indexOf(key) != -1 &&
         mostRecentComms[key] != message
       ) {
-        console.log(`${key} line has changed, sending message"${message}"`);
+        console.log(`${key} line has changed, sending message: "${message}"`);
         await this.telegram.sendMessage(message);
         mostRecentComms[key] = message;
         this.data.updateDataById("line-comms", mostRecentComms);
