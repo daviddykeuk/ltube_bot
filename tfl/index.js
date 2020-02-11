@@ -15,7 +15,7 @@ module.exports.getLineStatuses = () => {
           lines[l.id] = {
             name: l.name,
             status: l.lineStatuses[0].statusSeverityDescription,
-            message: calculateMessage(l),
+            ...calculateMessage(l),
             detail: l.lineStatuses[0].reason || ""
           };
         });
@@ -32,26 +32,61 @@ module.exports.getLineStatuses = () => {
 function calculateMessage(line) {
   switch (line.lineStatuses[0].statusSeverity) {
     case 10:
-      return `There is a good service on the ${line.name} line`;
+      return {
+        message: `There is a good service on the ${line.name} line`,
+        severity: "NONE"
+      };
     case 1:
-      return `The ${line.name} line is closed`;
+      return {
+        message: `The ${line.name} line is closed`,
+        severity: "SEVERE"
+      };
     case 2:
-      return `The ${line.name} line is suspended`;
+      return {
+        message: `The ${line.name} line is suspended`,
+        severity: "SEVERE"
+      };
     case 3:
-      return `The ${line.name} line is part suspended`;
+      return {
+        message: `The ${line.name} line is part suspended`,
+        severity: "SEVERE"
+      };
     case 4:
-      return `The ${line.name} line has a planned closure`;
+      return {
+        message: `The ${line.name} line has a planned closure`,
+        severity: "SEVERE"
+      };
     case 5:
-      return `The ${line.name} line has a partial closure`;
+      return {
+        message: `The ${line.name} line has a partial closure`,
+        severity: "SEVERE"
+      };
     case 6:
-      return `The ${line.name} line has severe delays`;
+      return {
+        message: `The ${line.name} line has severe delays`,
+        severity: "SEVERE"
+      };
     case 7:
-      return `The ${line.name} line has a reduced service`;
+      return {
+        message: `The ${line.name} line has a reduced service`,
+        severity: "SEVERE"
+      };
     case 8:
-      return `The ${line.name} line has a bus replacement service`;
+      return {
+        message: `The ${line.name} line has a bus replacement service`,
+        severity: "SEVERE"
+      };
     case 9:
-      return `The ${line.name} line has minor delays`;
+      return {
+        message: `The ${line.name} line has minor delays`,
+        severity: "MINOR"
+      };
+    case 20:
+      return { message: `The ${line.name} line is closed`, severity: "INFO" };
     default:
-      return `The ${line.name} has a status of ${line.lineStatuses[0].statusSeverityDescription}}`;
+      return {
+        message: `The ${line.name} has a status of ${line.lineStatuses[0].statusSeverityDescription}`,
+        severity: "UNKNOWN"
+      };
   }
 }

@@ -8,16 +8,19 @@ class Engine {
 
   processStatuses(statuses, mostRecentComms, preferences) {
     Object.keys(statuses).forEach(async key => {
-      let message = statuses[key].message;
+      let message = `${getEmojiCode(statuses[key].severity)} ${
+        statuses[key].message
+      }`;
       if (
         preferences.TUBE.LINES.indexOf(key) != -1 &&
-        mostRecentComms[key] != message
+        mostRecentComms[key] != message &&
+        statuses[key].severity != "INFO"
       ) {
         console.log(`${key} line has changed, sending message: "${message}"`);
         try {
           await this.telegram.sendMessage(message, statuses[key].detail);
           mostRecentComms[key] = message;
-          this.data.updateDataById("line-comms", mostRecentComms);
+          await this.data.updateDataById("line-comms", mostRecentComms);
         } catch (e) {
           console.error(e);
         }
@@ -41,3 +44,18 @@ class Engine {
 }
 
 module.exports = Engine;
+
+function getEmojiCode(severity) {
+  switch (severity) {
+    case "INFO":
+      return "🔵";
+    case "NONE":
+      return "🟢";
+    case "MINOR":
+      return "🟠";
+    case "SEVERE":
+      return "🛑";
+    default:
+      return "🟡";
+  }
+}
